@@ -14,6 +14,7 @@ server.use(cors());
 server.use('/api/auth', authRouter);
 server.use('/api/users', usersRouter);
 
+// sanity check
 server.get('/', (req, res) => {
   res.send("It's alive!");
 });
