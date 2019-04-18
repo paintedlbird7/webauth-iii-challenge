@@ -29,7 +29,7 @@ router.post('/login', (req, res) => {
         res.status(200).json({
           message: `Welcome ${user.username}!, have a token...`,
           token,
-          roles: token.roles,
+          departments: token.departments,
         });
       } else {
         res.status(401).json({ message: 'Invalid Credentials' });

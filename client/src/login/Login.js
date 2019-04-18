@@ -6,6 +6,7 @@ class Login extends React.Component {
     // sam is already registered in the solution
     username: 'rosa2', // ask students to register a user they can use to login
     password: 'perez', // to avoid having to type it when testing
+    department: 'Cosmetics',
   };
 
   render() {
