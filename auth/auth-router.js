@@ -1,15 +1,12 @@
 const router = require('express').Router();
 const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken')
 
-const secrets = require('../config/secrets.js');
-
+const tokenService = require('../auth/token-service.js');
 const Users = require('../users/users-model.js');
 
-// for endpoints beginning with /api/auth
 router.post('/register', (req, res) => {
   let user = req.body;
-  const hash = bcrypt.hashSync(user.password, 10); // 2 ^ n
+  const hash = bcrypt.hashSync(user.password, 10);
   user.password = hash;
 
   Users.add(user)
@@ -28,15 +25,11 @@ router.post('/login', (req, res) => {
     .first()
     .then(user => {
       if (user && bcrypt.compareSync(password, user.password)) {
-        const token = generateToken(user);
-
-        // the server needs to return the token to the client
-        // this doesn't happen automatically like it happens with cookies
-        
-
+        const token = tokenService.generateToken(user);
         res.status(200).json({
           message: `Welcome ${user.username}!, have a token...`,
-          token
+          token,
+          roles: token.roles,
         });
       } else {
         res.status(401).json({ message: 'Invalid Credentials' });
@@ -46,29 +39,5 @@ router.post('/login', (req, res) => {
       res.status(500).json(error);
     });
 });
-
-function generateToken(user) {
-  const payload = {
-    subject: user.id,
-    username: user.username,
-    departments: ['Cosmetics'],
-  }
-
-  const options = {
-    expiresIn: '1d'
-  }
-  return jwt.sign(payload, secrets.jwtSecret, options)
-}
-
-
-
-
-
-
-
-
-
-
-
 
 module.exports = router;

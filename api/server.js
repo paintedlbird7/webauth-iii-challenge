@@ -1,20 +1,16 @@
 const express = require('express');
-const helmet = require('helmet');
-const cors = require('cors');
 
+const configureMiddleware = require('./middleware.js');
 const authRouter = require('../auth/auth-router.js');
 const usersRouter = require('../users/users-router.js');
 
 const server = express();
 
-server.use(helmet());
-server.use(express.json());
-server.use(cors());
+configureMiddleware(server);
 
 server.use('/api/auth', authRouter);
 server.use('/api/users', usersRouter);
 
-// sanity check
 server.get('/', (req, res) => {
   res.send("It's alive!");
 });
